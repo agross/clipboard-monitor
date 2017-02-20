@@ -34,12 +34,15 @@ namespace ClipboardMonitor
       {
         case NativeConstants.WM_CLIPBOARDUPDATE:
           var thisText = GetLinksOrText();
-          if (_lastText != thisText)
+          if (!string.IsNullOrWhiteSpace(thisText))
           {
-            txtList.AppendText(thisText + Environment.NewLine);
-          }
+            if (_lastText != thisText)
+            {
+              txtList.AppendText(thisText + Environment.NewLine);
+            }
 
-          _lastText = thisText;
+            _lastText = thisText;
+          }
           m.Result = IntPtr.Zero;
           break;
       }
