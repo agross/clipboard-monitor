@@ -39,6 +39,10 @@ namespace ClipboardMonitor
             if (_lastText != thisText)
             {
               txtList.AppendText(thisText + Environment.NewLine);
+              notifyIcon.ShowBalloonTip(Convert.ToInt32(TimeSpan.FromSeconds(2).TotalMilliseconds),
+                                        "Link received",
+                                        thisText,
+                                        ToolTipIcon.Info);
             }
 
             _lastText = thisText;

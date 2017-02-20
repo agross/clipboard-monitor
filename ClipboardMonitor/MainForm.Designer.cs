@@ -28,9 +28,12 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       System.Windows.Forms.Button btnCopy;
       System.Windows.Forms.Button btnClear;
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
       this.txtList = new System.Windows.Forms.TextBox();
+      this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
       btnCopy = new System.Windows.Forms.Button();
       btnClear = new System.Windows.Forms.Button();
       this.SuspendLayout();
@@ -69,6 +72,11 @@
       this.txtList.Size = new System.Drawing.Size(627, 359);
       this.txtList.TabIndex = 0;
       //
+      // notifyIcon
+      //
+      this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+      this.notifyIcon.Visible = true;
+      //
       // MainForm
       //
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -77,6 +85,7 @@
       this.Controls.Add(btnClear);
       this.Controls.Add(btnCopy);
       this.Controls.Add(this.txtList);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "MainForm";
       this.Text = "Clipboard Monitor";
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -89,6 +98,7 @@
     #endregion
 
     private System.Windows.Forms.TextBox txtList;
+    private System.Windows.Forms.NotifyIcon notifyIcon;
   }
 }
 
