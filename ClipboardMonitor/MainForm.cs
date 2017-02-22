@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -54,8 +55,13 @@ namespace ClipboardMonitor
 
     static string GetLinksOrText()
     {
-      if (Clipboard.ContainsText(TextDataFormat.Html))
+      try
       {
+        if (!Clipboard.ContainsText(TextDataFormat.Html))
+        {
+          return Clipboard.GetText();
+        }
+
         var html = Clipboard.GetText(TextDataFormat.Html);
         var hrefs = Hrefs
           .Matches(html)
@@ -64,8 +70,10 @@ namespace ClipboardMonitor
 
         return string.Join(Environment.NewLine, hrefs);
       }
-
-      return Clipboard.GetText();
+      catch (System.Runtime.InteropServices.ExternalException)
+      {
+        return null;
+      }
     }
 
     void btnClear_Click(object sender, EventArgs e)
