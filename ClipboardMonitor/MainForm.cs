@@ -1,6 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -21,10 +25,21 @@ namespace ClipboardMonitor
                                             RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
     string _lastText;
+    Subject<int> _timeouts;
+    Color _defaultBackground;
+    IDisposable _disp;
 
     public MainForm()
     {
       InitializeComponent();
+
+      _timeouts = new Subject<int>();
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+      _disp.Dispose();
+      base.OnClosed(e);
     }
 
     protected override void WndProc(ref Message m)
@@ -39,6 +54,7 @@ namespace ClipboardMonitor
           {
             if (_lastText != thisText)
             {
+              _timeouts.OnNext(42);
               txtList.AppendText(thisText + Environment.NewLine);
               notifyIcon.ShowBalloonTip(500,
                                         "Link received",
@@ -114,6 +130,19 @@ namespace ClipboardMonitor
           return;
         }
       }
+
+      _defaultBackground = BackColor;
+
+      _disp = new CompositeDisposable(
+                              _timeouts
+                                .ObserveOn(this)
+                                .Do(_ => BackColor = Color.LightGreen)
+                                .Delay(TimeSpan.FromMilliseconds(500))
+                                .ObserveOn(this)
+                                .Do(_ => BackColor = _defaultBackground)
+                                .Subscribe())
+        ;
+
     }
   }
 }
